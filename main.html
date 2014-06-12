@@ -8,7 +8,50 @@
 		<input type="text" class="dial" data-min="0" data-max="4095" data-fgColor="#66CC66" data-angleOffset=-125 data-angleArc=250>
 		<script>
 		$(function() {
-	    	$(".dial").knob();
+
+			var sendApiRequest = function(v) {
+				console.log('foo ' + v);
+				$.post("https://api.spark.io/v1/devices/Core3/turnTo", {access_token: "836b4689f85d3c6fabae6478b53e5d704e530f3c", arg: v});
+
+
+
+			};
+
+
+			var _timer = null,
+				lastValue = 0,
+				minDelta = 100;
+
+			var onChange = function(v) {
+				if (_timer) {
+					clearTimeout(_timer);
+				}
+				if (Math.abs(v - lastValue) > minDelta) {
+					lastValue = v;
+					sendApiRequest(v);
+					return;
+				}
+				
+
+				_timer = setTimeout(function() { 
+					lastValue = v;
+					sendApiRequest(v)
+				}, 100);
+			};
+
+	    	$(".dial").knob(
+	    		{'change':  onChange
+			});
+
+
+/*
+		    $(".dial").knob({'change' : function (v) { 
+		    		// POST /v1/devices/{Core3}/{turnUp}}
+		    		console.log("foo");
+		    	}
+		    });
+*/
+
 		});
 		</script>
 	</BODY>
