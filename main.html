@@ -5,15 +5,13 @@
 	<script src="jQuery.knob.js"></script>
 	</HEAD>
 	<BODY>
-		<input type="text" class="dial" data-min="0" data-max="4095" data-fgColor="#66CC66" data-angleOffset=-125 data-angleArc=250>
+		<input type="text" class="dial" data-min="0" data-max="255" data-fgColor="#66CC66" data-angleOffset=-125 data-angleArc=250>
 		<script>
 		$(function() {
 
 			var sendApiRequest = function(v) {
 				console.log('foo ' + v);
 				$.post("https://api.spark.io/v1/devices/Core3/turnTo", {access_token: "26060875af3c6fb3a8985e25329c5cade8d23505", arg: v});
-
-
 
 			};
 
@@ -42,6 +40,7 @@
 	    	$(".dial").knob(
 	    		{'change':  onChange
 			});
+
 
 
 /*
