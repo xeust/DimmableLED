@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC>
+<HTML>
+	<HEAD>
+	<title>THE TORCH</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+	<script src="jQuery.knob.js"></script>
+	<style>
+
+        body {
+				background-image: url("Media/backgroundPic.jpg");
+				background-attachment: fixed;
+				background-size: 100%;
+				color : black;
+				text-align: center;
+				font-family: "Courier New";
+				font-size: 400%;
+
+		}
+
+		#submit {
+			width: 10%;
+			height: 5%;
+		}
+
+		#userInput {
+			width: 20%;
+			height: 5%;
+		}
+
+		#userInput2 {
+			width: 20%;
+			height: 5%;
+		}
+
+    </style>
+	</HEAD>
+	<BODY>
+
+		<p style= "font-size: 250%;">THE TORCH</p>
+
+		<p> Light it up. </p>
+		<p1>
+			<input type="text" class="dial" data-min="0" data-max="255" data-width="400" data-height="400" data-fgColor="#003366" data-angleOffset=-125 data-angleArc=250 />
+		</p1>
+
+		<p2>
+			<form id="form" onsubmit="return false;">
+			    Core ID : <input type="text" id="userInput" />
+			    <input type="submit" onclick="coreID();" id="submit"/>
+			</form>
+		</p2>
+
+		<p3>
+			<form id="form" onsubmit="return false;">
+			    Access Token : <input type="text" id="userInput2" />
+			    <input type="submit" onclick="accessToken();" id="submit"/>
+			</form>
+		</p3>
+
+		<script>
+
+			var core_ID;
+			var accessKey;
+
+			function coreID() {
+		    	var input = document.getElementById("userInput").value;
+		    	alert(input);
+		    	core_ID = input;
+
+			};
+
+			function accessToken() {
+		    	var input2 = document.getElementById("userInput2").value;
+		    	alert(input2);
+		    	accessKey = input2;
+
+			};
+
+			$(function() {
+
+				var sendApiRequest = function(v) {
+					var coreCall = "https://api.spark.io/v1/devices/" + core_ID + "/turnTo";
+					console.log('foo ' + v);
+					$.post("https://api.spark.io/v1/devices/Core3/turnTo", {access_token: accessKey, arg: v});
+
+				};
+
+
+				var _timer = null,
+					lastValue = 0,
+					minDelta = 10;
+
+				var onChange = function(v) {
+					if (_timer) {
+						clearTimeout(_timer);
+					}
+					if (Math.abs(v - lastValue) > minDelta) {
+						lastValue = v;
+						sendApiRequest(v);
+						return;
+					}
+					
+
+					_timer = setTimeout(function() { 
+						lastValue = v;
+						sendApiRequest(v)
+					}, 50);
+				};
+
+		    	$(".dial").knob(
+		    		{'change':  onChange
+				});
+
+			});
+		</script>
+
+	</BODY>
+</HTML>
